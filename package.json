@@ -1,39 +1,39 @@
 {
-  "name": "droplt",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "@testing-library/jest-dom": "^5.12.0",
-    "@testing-library/react": "^11.2.6",
-    "@testing-library/user-event": "^13.1.8",
-    "@types/jest": "^26.0.23",
-    "@types/node": "^15.0.2",
-    "@types/react": "^17.0.5",
-    "@types/react-dom": "^17.0.3",
-    "autoprefixer": "10.x",
-    "cross-env": "7.x",
-    "npm-run-all": "4.x",
-    "postcss": "8.x",
-    "postcss-cli": "8.x",
-    "postcss-preset-env": "6.x",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "react-scripts": "4.0.3",
-    "tailwindcss": "2.x",
-    "typescript": "4.x"
-  },
+  "name": "@droplt/app",
+  "version": "1.0.0",
+  "private": false,
+  "description": "Droplt App",
+  "repository": "git@github.com:droplt/graphql.git",
+  "license": "MIT",
+  "author": "François Lefebvre <francois.lfe@gmail.com>",
+  "main": "build/index.js",
   "scripts": {
     "start": "run-p watch:css react-scripts:start",
-    "build": "run-s build:css react-scripts:build",
+    "build": "run-s build:css react-scripts:build server:build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject",
+    "prepare": "husky install",
+    "lint": "eslint . --fix",
     "build:css": "cross-env TAILWIND_MODE=build NODE_ENV=production postcss src/styles/tailwind.css -o src/styles/index.css",
     "watch:css": "cross-env TAILWIND_MODE=watch NODE_ENV=development postcss src/styles/tailwind.css -o src/styles/index.css --watch",
     "react-scripts:start": "sleep 5 && react-scripts start",
-    "react-scripts:build": "react-scripts build"
+    "react-scripts:build": "react-scripts build",
+    "postreact-scripts:build": "precompress -s -t br -i html,js,css,json build",
+    "server:build": "tsc --project server/tsconfig.json",
+    "server:start": "ts-node-dev --project server/tsconfig.json --clear --rs --transpile-only --respawn server/index.ts"
   },
-  "eslintConfig": {
-    "extends": "react-app"
+  "commitlint": {
+    "extends": [
+      "@droplt"
+    ]
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "package.json": [
+      "sort-package-json"
+    ]
   },
   "browserslist": {
     "production": [
@@ -46,5 +46,81 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "prettier": {
+    "printWidth": 80,
+    "semi": true,
+    "singleQuote": true,
+    "trailingComma": "es5"
+  },
+  "eslintConfig": {
+    "plugins": [
+      "prettier",
+      "simple-import-sort"
+    ],
+    "extends": [
+      "react-app",
+      "prettier"
+    ],
+    "rules": {
+      "prettier/prettier": 2,
+      "simple-import-sort/exports": "error",
+      "simple-import-sort/imports": "error"
+    }
+  },
+  "eslintIgnore": [
+    "build"
+  ],
+  "dependencies": {
+    "@apollo/client": "^3.3.16",
+    "apollo-server-express": "^2.24.0",
+    "better-sqlite3": "^7.3.1",
+    "class-validator": "^0.13.1",
+    "dotenv": "^9.0.0",
+    "express": "^4.17.1",
+    "express-static-gzip": "^2.1.1",
+    "firebase": "^8.5.0",
+    "firebase-admin": "^9.7.0",
+    "firebaseui": "^4.8.0",
+    "fireorm": "^0.20.0",
+    "graphql": "^15.5.0",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-firebaseui": "^5.0.2",
+    "react-router-dom": "^5.2.0",
+    "tailwindcss": "2.x",
+    "type-graphql": "^1.1.1",
+    "typescript": "4.x"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^12.1.1",
+    "@droplt/commitlint-config": "^1.1.0",
+    "@testing-library/jest-dom": "^5.12.0",
+    "@testing-library/react": "^11.2.6",
+    "@testing-library/user-event": "^13.1.8",
+    "@types/express": "^4.17.11",
+    "@types/jest": "^26.0.23",
+    "@types/node": "^15.0.2",
+    "@types/react": "^17.0.5",
+    "@types/react-dom": "^17.0.3",
+    "@types/react-router-dom": "^5.1.7",
+    "autoprefixer": "10.x",
+    "cross-env": "7.x",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^3.4.0",
+    "eslint-plugin-simple-import-sort": "^7.0.0",
+    "husky": "^6.0.0",
+    "lint-staged": "^11.0.0",
+    "npm-run-all": "4.x",
+    "postcss": "8.x",
+    "postcss-cli": "8.x",
+    "postcss-preset-env": "6.x",
+    "precompress": "^6.3.2",
+    "prettier": "^2.2.1",
+    "react-scripts": "4.0.3",
+    "reflect-metadata": "^0.1.13",
+    "sort-package-json": "^1.50.0",
+    "ts-node-dev": "^1.1.6"
+  },
+  "proxy": "http://localhost:4000"
 }
