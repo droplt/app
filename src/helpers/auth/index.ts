@@ -1,2 +1,2 @@
-export { default as UserContext } from './context';
-export { default as AuthWrapper } from './wrapper';
+export * from './hooks';
+export { default as AuthProvider } from './provider';

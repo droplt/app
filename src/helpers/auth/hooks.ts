@@ -1,29 +1,56 @@
+import Firebase from 'firebase';
 import { useContext, useEffect, useState } from 'react';
 
-import { FirebaseContext } from '../firebase';
+import firebase, { AUTH_PROVIDER } from '../firebase';
+import { TokenContext, UserContext } from './contexts';
 
+/**
+ * Public hook that expose firebase auth
+ */
 export const useAuth = () => {
-  const firebase = useContext(FirebaseContext);
+  const user = useContext(UserContext);
+  const token = useContext(TokenContext);
+
+  const signOut = () => {
+    return firebase.auth().signOut();
+  };
+
+  return {
+    user,
+    token,
+    signOut,
+  };
+};
+
+/**
+ * Internal hook to handle the login popup
+ */
+export const useAuthPopup = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isSignedIn, setIsSignedIn] = useState(false);
-  const [user, setUser] = useState({} || null);
+  const [authUser, setAuthUser] = useState<Firebase.User | null>(null);
+  const [authToken, setAuthToken] = useState('');
 
   useEffect(() => {
     setIsLoading(true);
     const unregisterAuthObserver = firebase
       .auth()
-      .onAuthStateChanged((user) => {
-        setIsLoading(false);
-        setUser(user);
+      .onAuthStateChanged(async (user) => {
+        if (!!user) {
+          const token = await user?.getIdToken();
+          setAuthUser(user);
+          setAuthToken(token);
+        }
         setIsSignedIn(!!user);
+        setIsLoading(false);
       });
     return () => unregisterAuthObserver();
-  }, [firebase]);
+  }, []);
 
   const uiConfig = {
     signInFlow: 'popup',
     signInSuccessUrl: '/',
-    signInOptions: [firebase.auth.EmailAuthProvider.PROVIDER_ID],
+    signInOptions: [AUTH_PROVIDER.EMAIL],
     callbacks: {
       signInSuccessWithAuthResult: () => false,
     },
@@ -32,7 +59,8 @@ export const useAuth = () => {
   return {
     isLoading,
     isSignedIn,
-    user,
+    authUser,
+    authToken,
     firebase,
     uiConfig,
   };
