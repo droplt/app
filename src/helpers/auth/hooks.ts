@@ -12,6 +12,7 @@ export const useAuth = () => {
   const token = useContext(TokenContext);
 
   const signOut = () => {
+    localStorage.removeItem('token');
     return firebase.auth().signOut();
   };
 
@@ -38,6 +39,7 @@ export const useAuthPopup = () => {
       .onAuthStateChanged(async (user) => {
         if (!!user) {
           const token = await user?.getIdToken();
+          localStorage.setItem('token', token);
           setAuthUser(user);
           setAuthToken(token);
         }

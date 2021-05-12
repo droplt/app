@@ -1,5 +1,5 @@
 import { Collection, getRepository } from 'fireorm';
-import { Field, ID, ObjectType } from 'type-graphql';
+import { Authorized, Field, ID, ObjectType } from 'type-graphql';
 
 @Collection()
 @ObjectType()
@@ -10,6 +10,7 @@ export class UserModel {
   @Field(() => String)
   username: string;
 
+  @Authorized('ADMIN')
   @Field({ nullable: true })
   created_at?: Date;
 

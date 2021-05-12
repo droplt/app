@@ -1,17 +1,21 @@
 import { Link } from 'react-router-dom';
 
 import { useAuth } from '../../helpers/auth';
+import { useUserQuery } from './hooks';
 
 const UserPage = () => {
-  const { user, token, signOut } = useAuth();
+  const { user, signOut } = useAuth();
+  useUserQuery();
 
   return (
     <div>
-      <Link className="text-blue-700" to="/profile">
+      <Link className="text-crayola" to="/profile">
         Profile page - {user?.uid}
-        {token}
       </Link>
-      <button onClick={() => signOut()}>Logout</button>
+      <br />
+      <button className="text-crayola" onClick={() => signOut()}>
+        Logout
+      </button>
     </div>
   );
 };
