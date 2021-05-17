@@ -12,6 +12,8 @@ import * as TypeGraphQL from 'type-graphql';
 import { UserResolver } from './graphql';
 import { firebaseAuthChecker } from './middlewares/auth';
 
+const { BUILD_PATH, SERVER_PORT = 1338 } = process.env;
+
 (async () => {
   const app = express();
 
@@ -68,7 +70,7 @@ import { firebaseAuthChecker } from './middlewares/auth';
    * - handles pre-compressed files (brotli, gzip)
    */
   app.use(
-    gzip(path.join(__dirname, '..', process.env.BUILD_PATH), {
+    gzip(path.join(__dirname, '..', BUILD_PATH), {
       enableBrotli: true,
       orderPreference: ['br'],
     })
@@ -78,17 +80,15 @@ import { firebaseAuthChecker } from './middlewares/auth';
    * Handle client side routing
    */
   app.get('/*', (req, res) => {
-    res.sendFile(
-      path.join(__dirname, '..', process.env.BUILD_PATH, 'index.html')
-    );
+    res.sendFile(path.join(__dirname, '..', BUILD_PATH, 'index.html'));
   });
 
   /**
    * Start Express server
    */
-  app.listen(4000, () => {
-    console.log(`🎨 front -> http://localhost:4000/`);
-    console.log(`🚀 api -> http://localhost:4000/api`);
-    console.log(`🔥 graphql -> http://localhost:4000/graphql`);
+  app.listen(SERVER_PORT, () => {
+    console.log(`🎨 front -> http://localhost:${SERVER_PORT}/`);
+    console.log(`🚀 api -> http://localhost:${SERVER_PORT}/api`);
+    console.log(`🔥 graphql -> http://localhost:${SERVER_PORT}/graphql`);
   });
 })();

@@ -123,5 +123,5 @@
     "sort-package-json": "^1.50.0",
     "ts-node-dev": "^1.1.6"
   },
-  "proxy": "http://localhost:4000"
+  "proxy": "http://localhost:1338"
 }
