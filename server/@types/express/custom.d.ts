@@ -1,5 +1,8 @@
-declare namespace Express {
+import * as admin from 'firebase-admin';
+
+declare module 'express' {
   export interface Request {
-    user?: any;
+    token?: string;
+    user?: admin.auth.UserRecord;
   }
 }

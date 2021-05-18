@@ -11,6 +11,10 @@
     "outDir": "../build",
     "strict": true,
     "strictPropertyInitialization": false,
-    "target": "es2018"
+    "target": "es2018",
+    "typeRoots": [
+      "@types",
+      "./node_modules/@types",
+    ]
   }
 }

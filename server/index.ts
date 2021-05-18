@@ -1,68 +1,50 @@
 import 'dotenv-flow/config';
 import 'reflect-metadata';
-import './plugins/firebase';
+import './services/fireorm';
 
 import { ApolloServer } from 'apollo-server-express';
 import express from 'express';
+import bearer from 'express-bearer-token';
 import gzip from 'express-static-gzip';
-import * as admin from 'firebase-admin';
 import path from 'path';
 import * as TypeGraphQL from 'type-graphql';
 
 import { UserResolver } from './graphql';
-import { firebaseAuthChecker } from './middlewares/auth';
+import { authChecker, authMiddleware } from './middlewares/auth';
+import { Context } from './types';
 
 const { BUILD_PATH, SERVER_PORT = 1338 } = process.env;
 
 (async () => {
-  const app = express();
-
   /**
    * ApolloServer configuration
    */
   const server = new ApolloServer({
     schema: await TypeGraphQL.buildSchema({
       resolvers: [UserResolver],
-      authChecker: firebaseAuthChecker,
+      authChecker,
     }),
-    context: async ({ req }) => {
-      const context = {
-        req,
-        user: req.user,
-      };
-      return context;
-    },
+    context: async ({ req }): Promise<Context> => ({
+      req,
+      user: req.user,
+    }),
   });
+
+  /**
+   * Express app declaration
+   */
+  const app = express();
 
   /**
    * Additional middleware can be mounted here before starting ApolloServer
    */
-  app.use('/graphql', async (req, res, next) => {
-    const token = (req.headers?.authorization || '').replace('Bearer ', '');
-    const decoded = await admin.auth().verifyIdToken(token);
-    const user = await admin.auth().getUser(decoded.uid);
-    req.user = user;
-    next();
-  });
+  app.use(bearer());
+  app.use('/graphql', authMiddleware);
 
   /**
    * Connect ApolloServer to Express
    */
   server.applyMiddleware({ app, path: '/graphql' });
-
-  /**
-   * API routes
-   */
-  // app.post('/api/me', async (req, res) => {
-  //   try {
-  //     const token = req.body.token;
-  //     const decoded = await admin.auth().verifyIdToken(token);
-  //     res.json({});
-  //   } catch (error) {
-
-  //   }
-  //   console.log(decoded);
-  // });
 
   /**
    * Serve static files

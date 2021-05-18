@@ -13,6 +13,7 @@
     "test": "react-scripts test",
     "prepare": "husky install",
     "lint": "eslint . --fix",
+    "make:user-admin": "zx ./scripts/user-admin.mjs",
     "build:css": "cross-env TAILWIND_MODE=build NODE_ENV=production postcss src/styles/tailwind.css -o src/styles/index.css",
     "watch:css": "cross-env TAILWIND_MODE=watch NODE_ENV=development postcss src/styles/tailwind.css -o src/styles/index.css --watch",
     "react-scripts:start": "sleep 5 && react-scripts start",
@@ -78,6 +79,7 @@
     "class-validator": "^0.13.1",
     "dotenv-flow": "^3.2.0",
     "express": "^4.17.1",
+    "express-bearer-token": "^2.4.0",
     "express-static-gzip": "^2.1.1",
     "firebase": "^8.5.0",
     "firebase-admin": "^9.7.0",
@@ -90,7 +92,8 @@
     "react-router-dom": "^5.2.0",
     "tailwindcss": "2.x",
     "type-graphql": "^1.1.1",
-    "typescript": "4.x"
+    "typescript": "4.x",
+    "zx": "^1.7.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^12.1.1",
