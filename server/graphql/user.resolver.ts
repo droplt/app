@@ -1,11 +1,19 @@
 import { Arg, Query, Resolver } from 'type-graphql';
 
-import { UserModel, userRepository } from '../entities';
+import { toUserModel, UserModel } from '../entities';
+import admin from '../services/firebase';
 
 @Resolver(() => UserModel)
 export class UserResolver {
   @Query(() => UserModel)
-  async user(@Arg('id') id: string): Promise<UserModel> {
-    return userRepository.findById(id);
+  async user(@Arg('uid') uid: string): Promise<UserModel> {
+    const user = await admin.auth().getUser(uid);
+    return toUserModel(user);
+  }
+
+  @Query(() => [UserModel])
+  async users() {
+    const list = await admin.auth().listUsers(1000);
+    return list.users.map(toUserModel);
   }
 }

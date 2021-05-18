@@ -3,6 +3,9 @@ import { useContext, useEffect, useState } from 'react';
 
 import firebase, { AUTH_PROVIDER } from '../firebase';
 import { TokenContext, UserContext } from './contexts';
+import { getSessionCookie } from './helpers';
+
+const TOKEN_KEY = 'token';
 
 /**
  * Public hook that expose firebase auth
@@ -12,7 +15,7 @@ export const useAuth = () => {
   const token = useContext(TokenContext);
 
   const signOut = () => {
-    localStorage.removeItem('token');
+    localStorage.removeItem(TOKEN_KEY);
     return firebase.auth().signOut();
   };
 
@@ -34,18 +37,31 @@ export const useAuthPopup = () => {
 
   useEffect(() => {
     setIsLoading(true);
+
     const unregisterAuthObserver = firebase
       .auth()
       .onAuthStateChanged(async (user) => {
         if (!!user) {
+          // get auth token from auth user
           const token = await user?.getIdToken();
-          localStorage.setItem('token', token);
+
+          // save auth token to localStorage
+          localStorage.setItem(TOKEN_KEY, token);
+
+          // retrieve session cookie from server
+          await getSessionCookie(token);
+
+          // provide auth user to context
           setAuthUser(user);
+
+          // provide auth token to context
           setAuthToken(token);
         }
         setIsSignedIn(!!user);
         setIsLoading(false);
       });
+
+    // remove auth observer on component unmount
     return () => unregisterAuthObserver();
   }, []);
 

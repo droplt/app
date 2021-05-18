@@ -3,17 +3,16 @@ import 'reflect-metadata';
 import './services/fireorm';
 
 import { ApolloServer } from 'apollo-server-express';
-import express from 'express';
+import cookies from 'cookie-parser';
+import express, { json } from 'express';
 import bearer from 'express-bearer-token';
-import gzip from 'express-static-gzip';
-import path from 'path';
 import * as TypeGraphQL from 'type-graphql';
 
 import { UserResolver } from './graphql';
-import { authChecker, authMiddleware } from './middlewares/auth';
+import { auth, isAuthorized, session } from './middlewares/auth';
 import { Context } from './types';
 
-const { BUILD_PATH, SERVER_PORT = 1338 } = process.env;
+const { SERVER_PORT = 1338 } = process.env;
 
 (async () => {
   /**
@@ -22,48 +21,33 @@ const { BUILD_PATH, SERVER_PORT = 1338 } = process.env;
   const server = new ApolloServer({
     schema: await TypeGraphQL.buildSchema({
       resolvers: [UserResolver],
-      authChecker,
+      authChecker: isAuthorized,
     }),
     context: async ({ req }): Promise<Context> => ({
       req,
       user: req.user,
     }),
+    playground: {
+      settings: {
+        'request.credentials': 'include',
+      },
+    },
   });
 
   /**
-   * Express app declaration
+   * Express app configuration
    */
   const app = express();
-
-  /**
-   * Additional middleware can be mounted here before starting ApolloServer
-   */
+  app.use(json());
+  app.use(cookies());
   app.use(bearer());
-  app.use('/graphql', authMiddleware);
+  app.use(auth());
+  app.post('/api/session', session());
 
   /**
    * Connect ApolloServer to Express
    */
   server.applyMiddleware({ app, path: '/graphql' });
-
-  /**
-   * Serve static files
-   * - serve compiled React App files
-   * - handles pre-compressed files (brotli, gzip)
-   */
-  app.use(
-    gzip(path.join(__dirname, '..', BUILD_PATH), {
-      enableBrotli: true,
-      orderPreference: ['br'],
-    })
-  );
-
-  /**
-   * Handle client side routing
-   */
-  app.get('/*', (req, res) => {
-    res.sendFile(path.join(__dirname, '..', BUILD_PATH, 'index.html'));
-  });
 
   /**
    * Start Express server

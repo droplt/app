@@ -5,7 +5,7 @@ import { useUserQuery } from './hooks';
 
 const UserPage = () => {
   const { user, signOut } = useAuth();
-  const { data } = useUserQuery();
+  const { data } = useUserQuery(user?.uid);
 
   console.log(data);
 
