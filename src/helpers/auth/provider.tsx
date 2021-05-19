@@ -2,7 +2,7 @@ import React from 'react';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 
 import firebase from '../firebase';
-import { TokenContext, UserContext } from './contexts';
+// import { TokenContext, UserContext } from './contexts';
 import { useAuthPopup } from './hooks';
 
 const AuthProvider: React.FC = ({ children }) => {
@@ -10,8 +10,8 @@ const AuthProvider: React.FC = ({ children }) => {
     isLoading,
     isSignedIn,
     uiConfig,
-    authToken,
-    authUser,
+    // authToken,
+    // authUser,
   } = useAuthPopup();
 
   if (isLoading) {
@@ -25,11 +25,12 @@ const AuthProvider: React.FC = ({ children }) => {
   }
 
   return (
-    <UserContext.Provider value={authUser}>
-      <TokenContext.Provider value={authToken}>
-        {children}
-      </TokenContext.Provider>
-    </UserContext.Provider>
+    <div>{children}</div>
+    // <UserContext.Provider value={authUser}>
+    //   <TokenContext.Provider value={authToken}>
+    //     {children}
+    //   </TokenContext.Provider>
+    // </UserContext.Provider>
   );
 };
 

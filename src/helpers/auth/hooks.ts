@@ -1,30 +1,13 @@
-import Firebase from 'firebase';
+import * as firebaseui from 'firebaseui';
 import { useContext, useEffect, useState } from 'react';
 
-import firebase, { AUTH_PROVIDER } from '../firebase';
+import firebase, { AUTH_PERSISTENCE, AUTH_PROVIDER } from '../firebase';
 import { TokenContext, UserContext } from './contexts';
-import { getSessionCookie } from './helpers';
-
-const TOKEN_KEY = 'token';
-
-/**
- * Public hook that expose firebase auth
- */
-export const useAuth = () => {
-  const user = useContext(UserContext);
-  const token = useContext(TokenContext);
-
-  const signOut = () => {
-    localStorage.removeItem(TOKEN_KEY);
-    return firebase.auth().signOut();
-  };
-
-  return {
-    user,
-    token,
-    signOut,
-  };
-};
+import {
+  checkSessionCookie,
+  deleteSessionCookie,
+  getSessionCookieFromToken,
+} from './helpers';
 
 /**
  * Internal hook to handle the login popup
@@ -32,40 +15,37 @@ export const useAuth = () => {
 export const useAuthPopup = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isSignedIn, setIsSignedIn] = useState(false);
-  const [authUser, setAuthUser] = useState<Firebase.User | null>(null);
-  const [authToken, setAuthToken] = useState('');
+  // const [authUser, setAuthUser] = useState<Firebase.User | null>(null);
+  // const [authToken, setAuthToken] = useState('');
 
   useEffect(() => {
     setIsLoading(true);
 
+    // Call the server to check authentication state
+    checkSessionCookie().then((res) => {
+      setIsSignedIn(res);
+      setIsLoading(false);
+    });
+
+    // As we are using a custom auth token in a `httpOnly` cookie
+    // we can turn off the auth persistence.
+    firebase.auth().setPersistence(AUTH_PERSISTENCE.NONE);
+
+    // Listen for firebase sign-in / sign-out events
     const unregisterAuthObserver = firebase
       .auth()
       .onAuthStateChanged(async (user) => {
         if (!!user) {
-          // get auth token from auth user
           const token = await user?.getIdToken();
-
-          // save auth token to localStorage
-          localStorage.setItem(TOKEN_KEY, token);
-
-          // retrieve session cookie from server
-          await getSessionCookie(token);
-
-          // provide auth user to context
-          setAuthUser(user);
-
-          // provide auth token to context
-          setAuthToken(token);
+          const res = await getSessionCookieFromToken(token);
+          setIsSignedIn(res);
+          setIsLoading(false);
         }
-        setIsSignedIn(!!user);
-        setIsLoading(false);
       });
-
-    // remove auth observer on component unmount
     return () => unregisterAuthObserver();
   }, []);
 
-  const uiConfig = {
+  const uiConfig: firebaseui.auth.Config = {
     signInFlow: 'popup',
     signInSuccessUrl: '/',
     signInOptions: [AUTH_PROVIDER.EMAIL],
@@ -77,9 +57,28 @@ export const useAuthPopup = () => {
   return {
     isLoading,
     isSignedIn,
-    authUser,
-    authToken,
+    // authUser,
+    // authToken,
     firebase,
     uiConfig,
+  };
+};
+
+/**
+ * Public hook that expose firebase auth
+ */
+export const useAuth = () => {
+  const user = useContext(UserContext);
+  const token = useContext(TokenContext);
+
+  const signOut = async () => {
+    await deleteSessionCookie();
+    window.location.reload();
+  };
+
+  return {
+    user,
+    token,
+    signOut,
   };
 };

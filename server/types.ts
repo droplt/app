@@ -1,7 +1,9 @@
 import { Request } from 'express';
 import * as admin from 'firebase-admin';
 
+export type AuthUser = admin.auth.UserRecord;
+
 export interface Context {
-  user?: admin.auth.UserRecord;
+  user?: AuthUser;
   req: Request;
 }

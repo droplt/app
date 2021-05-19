@@ -15,4 +15,10 @@ export const AUTH_PROVIDER = {
   EMAIL: firebase.auth.EmailAuthProvider.PROVIDER_ID,
 };
 
+export const AUTH_PERSISTENCE = {
+  NONE: firebase.auth.Auth.Persistence.NONE,
+  LOCAL: firebase.auth.Auth.Persistence.LOCAL,
+  SESSION: firebase.auth.Auth.Persistence.SESSION,
+};
+
 export default app;

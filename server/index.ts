@@ -3,13 +3,12 @@ import 'reflect-metadata';
 import './services/fireorm';
 
 import { ApolloServer } from 'apollo-server-express';
-import cookies from 'cookie-parser';
 import express, { json } from 'express';
-import bearer from 'express-bearer-token';
+import path from 'path';
 import * as TypeGraphQL from 'type-graphql';
 
 import { UserResolver } from './graphql';
-import { auth, isAuthorized, session } from './middlewares/auth';
+import { authentication, authorization } from './middlewares';
 import { Context } from './types';
 
 const { SERVER_PORT = 1338 } = process.env;
@@ -21,7 +20,8 @@ const { SERVER_PORT = 1338 } = process.env;
   const server = new ApolloServer({
     schema: await TypeGraphQL.buildSchema({
       resolvers: [UserResolver],
-      authChecker: isAuthorized,
+      emitSchemaFile: path.resolve(__dirname, '../', 'schema.graphql'),
+      authChecker: authorization,
     }),
     context: async ({ req }): Promise<Context> => ({
       req,
@@ -39,10 +39,7 @@ const { SERVER_PORT = 1338 } = process.env;
    */
   const app = express();
   app.use(json());
-  app.use(cookies());
-  app.use(bearer());
-  app.use(auth());
-  app.post('/api/session', session());
+  app.use(authentication());
 
   /**
    * Connect ApolloServer to Express
