@@ -20,7 +20,8 @@
     "react-scripts:build": "react-scripts build",
     "postreact-scripts:build": "precompress -s -t br -i html,js,css,json build",
     "server:build": "tsc --project server/tsconfig.json",
-    "server:start": "NODE_ENV=development ts-node-dev --project server/tsconfig.json --clear --rs --transpile-only --respawn server/index.ts"
+    "server:start": "NODE_ENV=development ts-node-dev --project server/tsconfig.json --clear --rs --transpile-only --respawn server/index.ts",
+    "generate": "graphql-codegen --config codegen.yml"
   },
   "commitlint": {
     "extends": [
@@ -98,6 +99,11 @@
   "devDependencies": {
     "@commitlint/cli": "^12.1.1",
     "@droplt/commitlint-config": "^1.1.0",
+    "@graphql-codegen/cli": "1.21.4",
+    "@graphql-codegen/near-operation-file-preset": "^1.18.0",
+    "@graphql-codegen/typescript": "1.22.0",
+    "@graphql-codegen/typescript-operations": "^1.17.16",
+    "@graphql-codegen/typescript-react-apollo": "^2.2.4",
     "@testing-library/jest-dom": "^5.12.0",
     "@testing-library/react": "^11.2.6",
     "@testing-library/user-event": "^13.1.8",
