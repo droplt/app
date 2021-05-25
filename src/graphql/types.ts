@@ -1,3 +1,4 @@
+/* eslint-disable */
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = {
   [K in keyof T]: T[K];
@@ -18,17 +19,16 @@ export type Scalars = {
 };
 
 export type Query = {
-  __typename?: 'Query';
+  me: UserModel;
   user: UserModel;
   users: Array<UserModel>;
 };
 
 export type QueryUserArgs = {
-  uid?: Maybe<Scalars['String']>;
+  uid: Scalars['String'];
 };
 
 export type UserModel = {
-  __typename?: 'UserModel';
   activeAt?: Maybe<Scalars['DateTime']>;
   avatarUrl?: Maybe<Scalars['String']>;
   connectedAt?: Maybe<Scalars['DateTime']>;
@@ -40,4 +40,10 @@ export type UserModel = {
   phone?: Maybe<Scalars['String']>;
   uid: Scalars['ID'];
   username?: Maybe<Scalars['String']>;
+};
+
+export type AuthUserQueryVariables = Exact<{ [key: string]: never }>;
+
+export type AuthUserQuery = {
+  me: Pick<UserModel, 'uid' | 'email' | 'username'>;
 };

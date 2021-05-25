@@ -1,8 +1,9 @@
 import * as firebaseui from 'firebaseui';
 import { useContext, useEffect, useState } from 'react';
 
+import { useAuthUserQuery } from '../../graphql/hooks';
 import firebase, { AUTH_PERSISTENCE, AUTH_PROVIDER } from '../firebase';
-import { TokenContext, UserContext } from './contexts';
+import { AuthUserContext } from './contexts';
 import {
   checkSessionCookie,
   deleteSessionCookie,
@@ -15,8 +16,9 @@ import {
 export const useAuthPopup = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isSignedIn, setIsSignedIn] = useState(false);
-  // const [authUser, setAuthUser] = useState<Firebase.User | null>(null);
-  // const [authToken, setAuthToken] = useState('');
+  const { data: authUser, loading: authUserLoading } = useAuthUserQuery({
+    skip: isLoading || !isSignedIn,
+  });
 
   useEffect(() => {
     setIsLoading(true);
@@ -55,10 +57,9 @@ export const useAuthPopup = () => {
   };
 
   return {
-    isLoading,
+    isLoading: authUserLoading || isLoading,
     isSignedIn,
-    // authUser,
-    // authToken,
+    authUser,
     firebase,
     uiConfig,
   };
@@ -68,8 +69,7 @@ export const useAuthPopup = () => {
  * Public hook that expose firebase auth
  */
 export const useAuth = () => {
-  const user = useContext(UserContext);
-  const token = useContext(TokenContext);
+  const user = useContext(AuthUserContext);
 
   const signOut = async () => {
     await deleteSessionCookie();
@@ -77,8 +77,7 @@ export const useAuth = () => {
   };
 
   return {
-    user,
-    token,
+    user: user?.me,
     signOut,
   };
 };

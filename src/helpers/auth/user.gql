@@ -1,0 +1,7 @@
+query authUser {
+  me {
+    uid
+    email
+    username
+  }
+}

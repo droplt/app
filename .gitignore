@@ -8,9 +8,6 @@
 # testing
 /coverage
 
-# graphql
-schema.graphql
-
 # production
 /build
 /firebase.json

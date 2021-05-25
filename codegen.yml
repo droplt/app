@@ -1,25 +1,22 @@
-schema: "./schema.graphql"
-documents: "src/**/graphql.ts"
+overwrite: true
+schema: schema.gql
+documents: 'src/**/*.{gql,graphql}'
 generates:
-  src/types.ts:
+  src/graphql/types.ts:
     plugins:
       - typescript
-  src/:
-    preset: near-operation-file
+      - typescript-operations
+      - add:
+          content: '/* eslint-disable */'
+    config:
+      skipTypename: true
+  src/graphql/hooks.ts:
+    preset: import-types
     presetConfig:
-      baseTypesPath: types.ts
+      typesPath: ./types
     plugins:
-      - typescript
-      # - typescript-operations
-      # - typescript-react-apollo
-    # config:
-    #   withComponent: true
-    #   withHooks: true
-    #   withHOC: true
-    #   withMutationFn: true
-    #   withRefetchFn: false
-    #   withResultType: true
-    #   withMutationOptionsType: true
-  # src/generated/graphql.tsx:
-  #   plugins:
-  #     - typescript
+      - typescript-react-apollo
+      - add:
+          content: '/* eslint-disable */'
+    config:
+      skipTypename: true

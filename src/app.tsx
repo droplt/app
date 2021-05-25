@@ -7,8 +7,8 @@ import UserPage from './pages/UserPage';
 
 const App = () => {
   return (
-    <AuthProvider>
-      <ApolloProvider client={apollo}>
+    <ApolloProvider client={apollo}>
+      <AuthProvider>
         <BrowserRouter>
           <Switch>
             <Route exact path="/">
@@ -19,8 +19,8 @@ const App = () => {
             </Route>
           </Switch>
         </BrowserRouter>
-      </ApolloProvider>
-    </AuthProvider>
+      </AuthProvider>
+    </ApolloProvider>
   );
 };
 

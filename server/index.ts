@@ -4,7 +4,6 @@ import './services/fireorm';
 
 import { ApolloServer } from 'apollo-server-express';
 import express, { json } from 'express';
-import path from 'path';
 import * as TypeGraphQL from 'type-graphql';
 
 import { UserResolver } from './graphql';
@@ -20,7 +19,7 @@ const { SERVER_PORT = 1338 } = process.env;
   const server = new ApolloServer({
     schema: await TypeGraphQL.buildSchema({
       resolvers: [UserResolver],
-      emitSchemaFile: path.resolve(__dirname, '../', 'schema.graphql'),
+      emitSchemaFile: true,
       authChecker: authorization,
     }),
     context: async ({ req }): Promise<Context> => ({

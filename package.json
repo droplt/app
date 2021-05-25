@@ -8,12 +8,11 @@
   "author": "François Lefebvre <francois.lfe@gmail.com>",
   "main": "build/index.js",
   "scripts": {
-    "start": "run-p watch:css react-scripts:start",
-    "build": "run-s build:css react-scripts:build server:build",
+    "start": "run-p watch:css server:start codegen:start react-scripts:start",
+    "build": "run-s build:css server:build codegen:build react-scripts:build",
     "test": "react-scripts test",
     "prepare": "husky install",
     "lint": "eslint . --fix",
-    "make:user-admin": "zx ./scripts/user-admin.mjs",
     "build:css": "cross-env TAILWIND_MODE=build NODE_ENV=production postcss src/styles/tailwind.css -o src/styles/index.css",
     "watch:css": "cross-env TAILWIND_MODE=watch NODE_ENV=development postcss src/styles/tailwind.css -o src/styles/index.css --watch",
     "react-scripts:start": "sleep 5 && react-scripts start",
@@ -21,7 +20,9 @@
     "postreact-scripts:build": "precompress -s -t br -i html,js,css,json build",
     "server:build": "tsc --project server/tsconfig.json",
     "server:start": "NODE_ENV=development ts-node-dev --project server/tsconfig.json --clear --rs --transpile-only --respawn server/index.ts",
-    "generate": "graphql-codegen --config codegen.yml"
+    "codegen:build": "graphql-codegen",
+    "codegen:start": "graphql-codegen --watch",
+    "make:user-admin": "zx ./scripts/user-admin.mjs"
   },
   "commitlint": {
     "extends": [
@@ -99,8 +100,9 @@
   "devDependencies": {
     "@commitlint/cli": "^12.1.1",
     "@droplt/commitlint-config": "^1.1.0",
+    "@graphql-codegen/add": "^2.0.2",
     "@graphql-codegen/cli": "1.21.4",
-    "@graphql-codegen/near-operation-file-preset": "^1.18.0",
+    "@graphql-codegen/import-types-preset": "^1.18.1",
     "@graphql-codegen/typescript": "1.22.0",
     "@graphql-codegen/typescript-operations": "^1.17.16",
     "@graphql-codegen/typescript-react-apollo": "^2.2.4",

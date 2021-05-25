@@ -7,11 +7,14 @@ import { AuthUser, AuthUserType } from './decorators';
 @Resolver(() => UserModel)
 export class UserResolver {
   @Query(() => UserModel)
-  async user(
-    @AuthUser() authUser: AuthUserType,
-    @Arg('uid', { nullable: true }) uid?: string
-  ): Promise<UserModel> {
-    const user = await admin.auth().getUser(uid || authUser.uid);
+  async me(@AuthUser() authUser: AuthUserType): Promise<UserModel> {
+    const user = await admin.auth().getUser(authUser.uid);
+    return toUserModel(user);
+  }
+
+  @Query(() => UserModel)
+  async user(@Arg('uid') uid: string): Promise<UserModel> {
+    const user = await admin.auth().getUser(uid);
     return toUserModel(user);
   }
 
