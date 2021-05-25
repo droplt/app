@@ -1,5 +1,7 @@
 import { Field, ID, ObjectType } from 'type-graphql';
 
+import { UserRole } from '../types';
+
 @ObjectType()
 export class UserModel {
   @Field(() => ID)
@@ -11,27 +13,33 @@ export class UserModel {
   @Field({ nullable: true })
   phone?: string;
 
-  @Field({ nullable: true })
-  username?: string;
+  @Field()
+  username: string;
 
-  @Field({ nullable: true })
-  avatarUrl?: string;
+  @Field()
+  avatarUrl: string;
 
-  @Field({ nullable: true })
-  isAdmin?: boolean;
+  @Field(() => UserRole)
+  role: UserRole;
 
-  @Field({ nullable: true })
-  isVerified?: boolean;
+  @Field()
+  isAdmin: boolean;
 
-  @Field({ nullable: true })
-  isDisabled?: boolean;
+  @Field()
+  isContributor: boolean;
 
-  @Field({ nullable: true })
-  createdAt?: Date;
+  @Field()
+  isVisitor: boolean;
+
+  @Field()
+  isVerified: boolean;
+
+  @Field()
+  isDisabled: boolean;
+
+  @Field()
+  createdAt: Date;
 
   @Field({ nullable: true })
   connectedAt?: Date;
-
-  @Field({ nullable: true })
-  activeAt?: Date;
 }

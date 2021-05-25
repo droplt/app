@@ -2,6 +2,7 @@ import { Arg, Query, Resolver } from 'type-graphql';
 
 import { UserModel } from '../entities';
 import admin from '../services/firebase';
+import { UserRole } from '../types';
 import { AuthUser, AuthUserType } from './decorators';
 
 @Resolver(() => UserModel)
@@ -34,22 +35,31 @@ const toUserModel = (firebaseUser: admin.auth.UserRecord): UserModel => {
     customClaims,
     emailVerified,
     disabled,
-    photoURL,
-    displayName,
+    photoURL = '',
+    displayName = '',
   } = firebaseUser;
-  const { creationTime, lastSignInTime, lastRefreshTime } = metadata;
-  const { admin = false } = customClaims || {};
+  const { creationTime, lastSignInTime } = metadata;
+  const { admin = false, contributor = false } = customClaims || {};
+
+  const role = admin
+    ? UserRole.ADMIN
+    : contributor
+    ? UserRole.CONTRIBUTOR
+    : UserRole.VISITOR;
+
   return {
     uid,
     email,
     phone: phoneNumber,
     isDisabled: disabled,
     username: displayName,
+    role,
     avatarUrl: photoURL,
     isVerified: emailVerified,
-    isAdmin: admin,
+    isAdmin: role === UserRole.ADMIN,
+    isContributor: role === UserRole.CONTRIBUTOR,
+    isVisitor: role === UserRole.VISITOR,
     createdAt: new Date(creationTime),
-    connectedAt: new Date(lastSignInTime),
-    activeAt: lastRefreshTime ? new Date(lastRefreshTime) : undefined,
+    connectedAt: lastSignInTime ? new Date(lastSignInTime) : undefined,
   };
 };

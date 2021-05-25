@@ -15,15 +15,24 @@ type Query {
 }
 
 type UserModel {
-  activeAt: DateTime
-  avatarUrl: String
+  avatarUrl: String!
   connectedAt: DateTime
-  createdAt: DateTime
+  createdAt: DateTime!
   email: String
-  isAdmin: Boolean
-  isDisabled: Boolean
-  isVerified: Boolean
+  isAdmin: Boolean!
+  isContributor: Boolean!
+  isDisabled: Boolean!
+  isVerified: Boolean!
+  isVisitor: Boolean!
   phone: String
+  role: UserRole!
   uid: ID!
-  username: String
+  username: String!
+}
+
+"""User role"""
+enum UserRole {
+  ADMIN
+  CONTRIBUTOR
+  VISITOR
 }

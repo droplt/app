@@ -29,18 +29,27 @@ export type QueryUserArgs = {
 };
 
 export type UserModel = {
-  activeAt?: Maybe<Scalars['DateTime']>;
-  avatarUrl?: Maybe<Scalars['String']>;
+  avatarUrl: Scalars['String'];
   connectedAt?: Maybe<Scalars['DateTime']>;
-  createdAt?: Maybe<Scalars['DateTime']>;
+  createdAt: Scalars['DateTime'];
   email?: Maybe<Scalars['String']>;
-  isAdmin?: Maybe<Scalars['Boolean']>;
-  isDisabled?: Maybe<Scalars['Boolean']>;
-  isVerified?: Maybe<Scalars['Boolean']>;
+  isAdmin: Scalars['Boolean'];
+  isContributor: Scalars['Boolean'];
+  isDisabled: Scalars['Boolean'];
+  isVerified: Scalars['Boolean'];
+  isVisitor: Scalars['Boolean'];
   phone?: Maybe<Scalars['String']>;
+  role: UserRole;
   uid: Scalars['ID'];
-  username?: Maybe<Scalars['String']>;
+  username: Scalars['String'];
 };
+
+/** User role */
+export enum UserRole {
+  Admin = 'ADMIN',
+  Contributor = 'CONTRIBUTOR',
+  Visitor = 'VISITOR',
+}
 
 export type AuthUserQueryVariables = Exact<{ [key: string]: never }>;
 

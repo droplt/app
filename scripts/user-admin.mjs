@@ -11,6 +11,8 @@ void (async function () {
   });
 
   let uid = await question(chalk`🚀 Enter user {bold uid}: `);
-  await admin.auth().setCustomUserClaims(uid, { admin: true });
+  await admin
+    .auth()
+    .setCustomUserClaims(uid, { admin: true, contributor: false });
   console.log(chalk`Done ✅`);
 })();
