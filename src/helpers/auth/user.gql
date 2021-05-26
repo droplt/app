@@ -3,5 +3,8 @@ query authUser {
     uid
     email
     username
+    role
+    createdAt
+    connectedAt
   }
 }
