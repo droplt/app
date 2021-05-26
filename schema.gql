@@ -8,10 +8,23 @@ The javascript `Date` as string. Type represents date and time as the ISO Date s
 """
 scalar DateTime
 
+type Mutation {
+  updateUser(data: UpdateUserInput!, uid: String!): UserModel!
+}
+
 type Query {
   me: UserModel!
   user(uid: String!): UserModel!
   users: [UserModel!]!
+}
+
+input UpdateUserInput {
+  avatarUrl: String
+  email: String
+  isDisabled: Boolean
+  password: String
+  phone: String
+  username: String
 }
 
 type UserModel {
