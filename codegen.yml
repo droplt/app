@@ -1,6 +1,7 @@
 overwrite: true
 schema: schema.gql
 documents: 'src/**/*.{gql,graphql}'
+errorsOnly: true
 generates:
   src/graphql/types.ts:
     plugins:
