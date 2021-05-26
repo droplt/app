@@ -17,7 +17,7 @@ export class UserModel {
   username: string;
 
   @Field()
-  avatarUrl: string;
+  photoURL: string;
 
   @Field(() => UserRole)
   role: UserRole;

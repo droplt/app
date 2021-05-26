@@ -3,7 +3,7 @@ import { Field, InputType } from 'type-graphql';
 import { UserModel } from '../../entities';
 
 @InputType()
-export class UpdateUserInput implements Partial<UserModel> {
+export class UpdateMeInput implements Partial<UserModel> {
   @Field({ nullable: true })
   username?: string;
 
@@ -15,10 +15,4 @@ export class UpdateUserInput implements Partial<UserModel> {
 
   @Field({ nullable: true })
   phone?: string;
-
-  @Field({ nullable: true })
-  password?: string;
-
-  @Field({ nullable: true })
-  isDisabled?: boolean;
 }

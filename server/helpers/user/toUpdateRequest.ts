@@ -14,12 +14,12 @@ import admin from '../../services/firebase';
 const toUpdateRequest = (
   updates: UpdateUserInput
 ): admin.auth.UpdateRequest => {
-  const { username, email, phone, password, avatarUrl, isDisabled } = updates;
+  const { username, email, phone, password, photoURL, isDisabled } = updates;
 
   // clean "undefined" values from updates
   return pickBy((value) => typeof value !== 'undefined', {
     displayName: username,
-    photoURL: avatarUrl,
+    photoURL,
     disabled: isDisabled,
     email,
     phoneNumber: phone,

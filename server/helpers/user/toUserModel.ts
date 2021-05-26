@@ -30,7 +30,7 @@ const toUserModel = (firebaseUser: admin.auth.UserRecord): UserModel => {
     isDisabled: disabled,
     username: displayName,
     role,
-    avatarUrl: photoURL,
+    photoURL,
     isVerified: emailVerified,
     isAdmin: role === UserRole.ADMIN,
     isContributor: role === UserRole.CONTRIBUTOR,

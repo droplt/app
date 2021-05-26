@@ -1,10 +1,11 @@
-import { Arg, Mutation, Query, Resolver } from 'type-graphql';
+import { Arg, Authorized, Mutation, Query, Resolver } from 'type-graphql';
 
 import { UserModel } from '../entities';
 import { toUpdateRequest, toUserModel } from '../helpers/user';
 import admin from '../services/firebase';
+import { UserRole } from '../types';
 import { AuthUser, AuthUserType } from './decorators';
-import { UpdateUserInput } from './inputs';
+import { UpdateMeInput, UpdateUserInput } from './inputs';
 
 @Resolver(() => UserModel)
 export class UserResolver {
@@ -26,6 +27,18 @@ export class UserResolver {
     return list.users.map((user) => toUserModel(user));
   }
 
+  @Mutation(() => UserModel)
+  async updateMe(
+    @AuthUser() authUser: AuthUserType,
+    @Arg('data') updates: UpdateMeInput
+  ): Promise<UserModel> {
+    const user = await admin
+      .auth()
+      .updateUser(authUser.uid, toUpdateRequest(updates));
+    return toUserModel(user);
+  }
+
+  @Authorized(UserRole.ADMIN)
   @Mutation(() => UserModel)
   async updateUser(
     @Arg('uid') uid: string,
