@@ -1,7 +1,7 @@
 import React from 'react';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 
-import firebase from '../firebase';
+import firebase from '../../services/firebase';
 import { AuthUserContext } from './contexts';
 import { useAuthPopup } from './hooks';
 

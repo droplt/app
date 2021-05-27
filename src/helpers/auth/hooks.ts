@@ -2,7 +2,10 @@ import * as firebaseui from 'firebaseui';
 import { useContext, useEffect, useState } from 'react';
 
 import { useAuthUserQuery } from '../../graphql/hooks';
-import firebase, { AUTH_PERSISTENCE, AUTH_PROVIDER } from '../firebase';
+import firebase, {
+  AUTH_PERSISTENCE,
+  AUTH_PROVIDER,
+} from '../../services/firebase';
 import { AuthUserContext } from './contexts';
 import {
   checkSessionCookie,

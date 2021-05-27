@@ -1,9 +1,9 @@
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
-import apollo, { ApolloProvider } from './helpers/apollo';
 import { AuthProvider } from './helpers/auth';
 import ProfilePage from './pages/ProfilePage';
 import UserPage from './pages/UserPage';
+import apollo, { ApolloProvider } from './services/apollo';
 
 const App = () => {
   return (

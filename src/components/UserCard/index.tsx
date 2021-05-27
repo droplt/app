@@ -1,22 +1,26 @@
-import { format } from 'date-fns';
-
+import { format, FORMAT_P, formatDistanceToNow } from '../../helpers/date';
 import Card from '../common/Card';
 import Text from '../common/Text';
 import { Props } from './types';
 
 const UserCard: React.FC<Props> = ({ user }) => {
+  const { username, role, createdAt, connectedAt } = user;
+
   return (
     <Card>
       <div className="flex flex-col space-y-2">
         <Text size={2} weight="medium">
-          {user.username} - {user.role}
+          {username} - {role}
         </Text>
         <Text size={-1} level="secondary">
-          Inscrit le {format(new Date(user.createdAt), 'P')}
+          Inscrit le {format(new Date(createdAt), FORMAT_P)}
         </Text>
-        <Text size={-1} weight="light" level="light">
-          Dernière connexion il y a 5 jours
-        </Text>
+        {connectedAt && (
+          <Text size={-1} weight="light" level="light">
+            Dernière connexion il y a{' '}
+            {formatDistanceToNow(new Date(connectedAt))}
+          </Text>
+        )}
       </div>
     </Card>
   );
