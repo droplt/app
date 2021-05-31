@@ -7,7 +7,7 @@ import { ApolloServer } from 'apollo-server-express';
 import express, { json } from 'express';
 import * as TypeGraphQL from 'type-graphql';
 
-import { UserResolver } from './graphql';
+import { TorrentResolver, UserResolver } from './graphql';
 import { authentication, authorization } from './middlewares';
 import { Context } from './types';
 
@@ -19,7 +19,7 @@ const { SERVER_PORT = 1338 } = process.env;
    */
   const server = new ApolloServer({
     schema: await TypeGraphQL.buildSchema({
-      resolvers: [UserResolver],
+      resolvers: [UserResolver, TorrentResolver],
       emitSchemaFile: true,
       authChecker: authorization,
     }),
