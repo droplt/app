@@ -2,7 +2,7 @@ import { Field, ID, ObjectType } from 'type-graphql';
 
 import { UserRole } from '../types';
 
-@ObjectType()
+@ObjectType('User')
 export class UserModel {
   @Field(() => ID)
   uid: string;

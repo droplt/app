@@ -1,7 +1,7 @@
 import { Collection, getRepository } from 'fireorm';
 import { Field, ID, ObjectType } from 'type-graphql';
 
-@ObjectType()
+@ObjectType('Torrent')
 @Collection('Torrents')
 export class TorrentModel {
   @Field(() => ID)
