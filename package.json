@@ -100,6 +100,8 @@
     "react-i18next": "^11.10.0",
     "react-router-dom": "^5.2.0",
     "tailwindcss": "2.x",
+    "toad-scheduler": "^1.3.0",
+    "transmission-promise": "^1.1.5",
     "type-graphql": "^1.1.1",
     "typescript": "4.x",
     "zx": "^1.7.0"

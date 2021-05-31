@@ -1,6 +1,7 @@
 import 'dotenv-flow/config';
 import 'reflect-metadata';
 import './services/fireorm';
+import './services/transmission';
 
 import { ApolloServer } from 'apollo-server-express';
 import express, { json } from 'express';
