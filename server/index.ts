@@ -9,7 +9,7 @@ import { ToadScheduler } from 'toad-scheduler';
 import * as TypeGraphQL from 'type-graphql';
 
 import { TorrentResolver, UserResolver } from './graphql';
-import { transmissionSync } from './jobs';
+import { job as sync } from './jobs/transmission-sync';
 import { authentication, authorization } from './middlewares';
 import { Context } from './types';
 
@@ -19,8 +19,7 @@ const { SERVER_PORT = 1338 } = process.env;
   /**
    * Job scheduler
    */
-  const scheduler = new ToadScheduler();
-  scheduler.addSimpleIntervalJob(transmissionSync);
+  new ToadScheduler().addSimpleIntervalJob(sync);
 
   /**
    * ApolloServer configuration
