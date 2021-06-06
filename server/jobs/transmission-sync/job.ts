@@ -1,15 +1,16 @@
 import { AsyncTask, SimpleIntervalJob } from 'toad-scheduler';
 
-import SyncHandler from './handler';
+import Handler from './handler';
 
-const syncHandler = new SyncHandler();
+const handler = new Handler();
 
 export const JOB_ID = 'transmission-sync';
+
 export const job = new SimpleIntervalJob(
-  { seconds: 3 },
+  { seconds: 5 },
   new AsyncTask(
     JOB_ID,
-    () => syncHandler.run(),
+    () => handler.run(),
     () => {}
   )
 );

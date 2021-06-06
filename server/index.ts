@@ -5,22 +5,16 @@ import './services/transmission';
 
 import { ApolloServer } from 'apollo-server-express';
 import express, { json } from 'express';
-import { ToadScheduler } from 'toad-scheduler';
 import * as TypeGraphQL from 'type-graphql';
 
 import { TorrentResolver, UserResolver } from './graphql';
-import { job as sync } from './jobs/transmission-sync';
+import { start } from './jobs';
 import { authentication, authorization } from './middlewares';
 import { Context } from './types';
 
 const { SERVER_PORT = 1338 } = process.env;
 
 (async () => {
-  /**
-   * Job scheduler
-   */
-  new ToadScheduler().addSimpleIntervalJob(sync);
-
   /**
    * ApolloServer configuration
    */
@@ -60,5 +54,10 @@ const { SERVER_PORT = 1338 } = process.env;
     console.log(`🎨 front -> http://localhost:${SERVER_PORT}/`);
     console.log(`🚀 api -> http://localhost:${SERVER_PORT}/api`);
     console.log(`🔥 graphql -> http://localhost:${SERVER_PORT}/graphql`);
+
+    /**
+     * Start jobs
+     */
+    start();
   });
 })();
